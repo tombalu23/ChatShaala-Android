@@ -1,0 +1,23 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+
+        <android.support.design.widget.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/bottomNavViewBar"
+            app:menu="@menu/bottom_navigation_menu"
+            android:background="@drawable/white_grey_border_bottom">
+
+
+        </android.support.design.widget.BottomNavigationView>
+
+    </RelativeLayout>
+
+
+
+</merge>
