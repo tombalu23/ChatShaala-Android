@@ -14,8 +14,7 @@ Login XML from Github-->
         android:orientation="vertical"
         android:paddingTop="55dp"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        >
+        android:paddingRight="25dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -77,15 +76,18 @@ Login XML from Github-->
     </LinearLayout>
 
     <ProgressBar
+        android:id="@+id/loginRequestLoadingProgressbar"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:id="@+id/loginRequestLoadingProgressbar"
-        android:layout_centerInParent="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="62dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please wait..."
+        android:id="@+id/pleaseWaitText"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:layout_centerHorizontal="true"
