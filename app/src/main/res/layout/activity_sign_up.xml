@@ -89,7 +89,7 @@ Modified Login XML slightly-->
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
             android:text="Sign Up!"
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_signUp"
             android:background="@drawable/white_rounded_button"
             android:padding="12dp" />
 
@@ -100,7 +100,7 @@ Modified Login XML slightly-->
             android:text="Have an account already? Sign in"
             android:gravity="center"
             android:textSize="16dp"
-            android:id="@+id/link_signup"
+            android:id="@+id/link_signin"
             android:textColor="@color/link_blue"/>
 
     </LinearLayout>
@@ -112,6 +112,7 @@ Modified Login XML slightly-->
         android:layout_centerInParent="true"/>
 
     <TextView
+        android:id="@+id/pleaseWaitText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please wait..."

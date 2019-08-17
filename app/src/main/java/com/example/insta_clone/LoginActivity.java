@@ -87,7 +87,7 @@ mAuth = FirebaseAuth.getInstance();
      */
 
     private void init(){
-
+        mProgressBar.setVisibility(View.INVISIBLE);
         //initialize the button for logging in
         Button btnLogin = (Button) findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
