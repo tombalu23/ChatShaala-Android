@@ -1,4 +1,4 @@
-package com.example.insta_clone;
+package com.example.insta_clone.Login_SignUp;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.insta_clone.Home.HomeActivity;
+import com.example.insta_clone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -72,6 +72,7 @@ private FirebaseAuth mAuth;
      * Create Account method
      *
      * currently (17/08/2019) creates account with just email and password
+     *
      *
      * TODO Get Name, College Name and store in Firebase
      *

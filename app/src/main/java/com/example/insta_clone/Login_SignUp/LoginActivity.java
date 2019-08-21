@@ -1,4 +1,4 @@
-package com.example.insta_clone;
+package com.example.insta_clone.Login_SignUp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.insta_clone.Home.HomeActivity;
+import com.example.insta_clone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
