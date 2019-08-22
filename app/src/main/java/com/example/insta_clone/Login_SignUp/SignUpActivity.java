@@ -85,9 +85,11 @@ private Context mContext;
                 startActivity(intent);
             }
         });
+        //username="bala";
+        //setupFirebaseAuth();
+        //init();
 
-        setupFirebaseAuth();
-        init();
+        registerNewUser();
 
 
 
@@ -129,7 +131,7 @@ private Context mContext;
                 if(checkInputs(email, username, password)){
                     mProgressBar.setVisibility(View.GONE);
 
-                    firebaseMethods.registerNewEmail(email, password, username);
+                    //firebaseMethods.registerNewEmail(email, password, username);
                 }
             }
         });
@@ -232,7 +234,7 @@ private Context mContext;
 
     private boolean checkInputs(String email, String username, String password){
         Log.d(TAG, "checkInputs: checking inputs for null values.");
-        if(email.equals("") || username.equals("") || password.equals("")){
+        if(email.trim().equals("") || username.trim().equals("") || password.equals("")){
             Toast.makeText(getApplicationContext(), "All fields must be filled out.", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -245,14 +247,13 @@ private Context mContext;
 
     private void setupFirebaseAuth(){
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
-
+        username="balaji";
 
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("users");
+        myRef = firebaseDatabase.getReference("users").child("username");
         //initialising username to avoid null pointer exception
-        username="balaji";
 
 
                 myRef.addValueEventListener(new ValueEventListener() {
@@ -260,16 +261,17 @@ private Context mContext;
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //1st check: Make sure the username is not already in use
 
-
-                        if(firebaseMethods.checkIfUsernameExists(username, dataSnapshot)){
+                       if(firebaseMethods.checkIfUsernameExists(username, dataSnapshot)){
 
                             Log.d(TAG, "onDataChange: username already exists");
-                        }
+                            Toast.makeText(getApplicationContext(), "Username already taken!", Toast.LENGTH_SHORT).show();
 
+
+                        }
                         else {
                             //add new user to the database
                             Log.d(TAG, "username available");
-
+                            //firebaseMethods.registerNewEmail(email, password, username);
                             firebaseMethods.addNewUser(email, username, " ", " ", " ", 1234567);
 
                             Toast.makeText(getApplicationContext(), "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
@@ -287,6 +289,56 @@ private Context mContext;
 
 
                 // ...
+            }
+
+
+
+            public void registerNewUser(){
+                btnSignUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        email = input_email.getText().toString();
+                        username = input_name.getText().toString();
+                        password = input_password.getText().toString();
+
+                        if(checkInputs(email, username, password)){
+                            mProgressBar.setVisibility(View.GONE);
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                            ref.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(firebaseMethods.checkIfUsernameExists(username, dataSnapshot)){
+                                        // use "username" already exists
+                                        // Let the user know he needs to pick another username.
+                                        Log.d(TAG, "onDataChange: username already exists");
+                                        Toast.makeText(getApplicationContext(), "Username already taken!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // User does not exist. NOW call createUserWithEmailAndPassword
+                                        // ;
+                                        // Your previous code here.
+                                        Log.d(TAG, "username available");
+
+                                        firebaseMethods.registerNewEmail(email, password, " ", " ", " ", 12432432 );
+
+                                        //firebaseMethods.addNewUser(email, username, " ", " ", " ", 1234567);
+
+                                        Toast.makeText(getApplicationContext(), "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
+
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                        }
+                    }
+                });
             }
 
 
