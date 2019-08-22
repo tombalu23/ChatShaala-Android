@@ -114,6 +114,7 @@ public class FirebaseMethods {
                 .child(userID)
                 .setValue(user);
         Log.d(TAG, "addNewUser: added new user");
+        Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
 
     }
 
