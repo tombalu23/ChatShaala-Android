@@ -78,7 +78,7 @@ public class FirebaseMethods {
     /**
      * Register a new email and password with Firebase Authentication
      */
-    public void registerNewEmail(final String email, final String password, final String college_name, final String website, final String profile_photo, final long mobile_no){
+    public void registerNewEmail(final String email, final String password, final String username, final String website, final String profile_photo, final long mobile_no){
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -98,7 +98,7 @@ public class FirebaseMethods {
                             userID = mAuth.getCurrentUser().getUid();
                             Toast.makeText(mContext, R.string.auth_success, Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onComplete: Authstate changed: " + userID);
-                            addNewUser(email, password, college_name, website, profile_photo, mobile_no);
+                            addNewUser(email, username, "Amrita Vishwa Vidyapeetham", website, profile_photo, mobile_no);
 
                         }
 

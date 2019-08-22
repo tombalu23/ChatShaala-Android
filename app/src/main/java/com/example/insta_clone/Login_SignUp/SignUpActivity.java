@@ -319,7 +319,7 @@ private Context mContext;
                                         // Your previous code here.
                                         Log.d(TAG, "username available");
 
-                                        firebaseMethods.registerNewEmail(email, password, " ", " ", " ", 12432432 );
+                                        firebaseMethods.registerNewEmail(email, password, username, " ", " ", 12432432 );
 
                                         //firebaseMethods.addNewUser(email, username, " ", " ", " ", 1234567);
 
