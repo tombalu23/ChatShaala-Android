@@ -323,7 +323,7 @@ private Context mContext;
 
                                         //firebaseMethods.addNewUser(email, username, " ", " ", " ", 1234567);
 
-                                        Toast.makeText(getApplicationContext(), "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(getApplicationContext(), "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
 
 
                                     }
