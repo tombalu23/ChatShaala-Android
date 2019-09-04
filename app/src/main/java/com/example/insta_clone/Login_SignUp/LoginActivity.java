@@ -1,6 +1,8 @@
 package com.example.insta_clone.Login_SignUp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.UUID;
 
 public class LoginActivity extends AppCompatActivity {
     String TAG = "LoginActivity";
@@ -128,6 +132,14 @@ mAuth = FirebaseAuth.getInstance();
                                                 Toast.LENGTH_SHORT).show();
                                         mProgressBar.setVisibility(View.GONE);
                                         mPleaseWaitText.setVisibility(View.GONE);
+
+                                        //added by girish 26-08-2019 - Saving Username in Shared-Preferences
+                                        String currentuser = mAuth.getCurrentUser().getUid();
+                                        SharedPreferences sp = getSharedPreferences("My_Preferences", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sp.edit();
+                                        editor.putString("UserID",currentuser );
+
+
 
                                         //Navigate to Home Activity on sign in success
                                         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

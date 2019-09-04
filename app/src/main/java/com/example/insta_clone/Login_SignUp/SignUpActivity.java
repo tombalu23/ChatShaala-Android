@@ -33,12 +33,20 @@ EditText input_email;
 EditText input_password;
 EditText input_name;
 EditText input_mobile_no;
+EditText input_displayName;
+EditText input_collegeName;
+
 ProgressBar mProgressBar;
 Button btnSignUp;
 TextView mPleaseWaitText;
 String email;
 String password;
 String username;
+String college_name;
+String display_name;
+
+long mobile_no;
+String name;
 FirebaseMethods firebaseMethods;
 
 
@@ -61,14 +69,21 @@ private Context mContext;
 
         btnSignUp = findViewById(R.id.btn_signUp);
 
-        input_name = findViewById(R.id.input_full_name);
+        input_name = findViewById(R.id.input_username);
         input_email = findViewById(R.id.input_email);
         input_password = findViewById(R.id.input_password);
         mProgressBar = findViewById(R.id.loginRequestLoadingProgressbar);
         mPleaseWaitText = findViewById(R.id.pleaseWaitText);
+        input_displayName = findViewById(R.id.input_full_name);
+        input_collegeName = findViewById(R.id.input_college_name);
+        input_mobile_no =findViewById(R.id.input_mobile_no);
+
         email = input_email.getText().toString();
         password = input_password.getText().toString();
         username = input_name.getText().toString();
+        display_name = input_displayName.getText().toString();
+        college_name = input_collegeName.getText().toString();
+     //   mobile_no = Long.parseLong(input_mobile_no.getText().toString());
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -120,22 +135,24 @@ private Context mContext;
 
 
 
-    private void init(){
+   /* private void init(){
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 email = input_email.getText().toString();
                 username = input_name.getText().toString();
                 password = input_password.getText().toString();
+               // mobile_no = input_mobile_no.getText().toString();
+                college_name = input_collegeName.getText().toString();
 
-                if(checkInputs(email, username, password)){
+                if(checkInputs(email, username, password, college_name, )){
                     mProgressBar.setVisibility(View.GONE);
 
                     //firebaseMethods.registerNewEmail(email, password, username);
                 }
             }
         });
-    }
+    }*/
 
    /* private void createAccount()
     {
@@ -232,9 +249,9 @@ private Context mContext;
 
 
 
-    private boolean checkInputs(String email, String username, String password){
+    private boolean checkInputs(String email, String username, String password, String college_name, String mobile_no_text,String display_name){
         Log.d(TAG, "checkInputs: checking inputs for null values.");
-        if(email.trim().equals("") || username.trim().equals("") || password.equals("")){
+        if(email.trim().equals("") || username.trim().equals("") || password.equals("") ||college_name.trim().equals("")|| mobile_no_text.trim().equals("") || display_name.trim().equals("")){
             Toast.makeText(getApplicationContext(), "All fields must be filled out.", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -294,15 +311,22 @@ private Context mContext;
 
 
             public void registerNewUser(){
+                mProgressBar.setVisibility(View.GONE);
                 btnSignUp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         email = input_email.getText().toString();
                         username = input_name.getText().toString();
                         password = input_password.getText().toString();
+                        display_name = input_displayName.getText().toString();
+                        college_name = input_collegeName.getText().toString();
+                        String mobile_no_text = input_mobile_no.getText().toString();
 
-                        if(checkInputs(email, username, password)){
+
+
+                        if(checkInputs(email, username, password, college_name, mobile_no_text, display_name)){
                             mProgressBar.setVisibility(View.GONE);
+                            mobile_no = Long.parseLong(mobile_no_text);
 
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                             ref.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -319,7 +343,7 @@ private Context mContext;
                                         // Your previous code here.
                                         Log.d(TAG, "username available");
 
-                                        firebaseMethods.registerNewEmail(email, password, username, " ", " ", 12432432 );
+                                        firebaseMethods.registerNewEmail(email, password, username, college_name, " ", mobile_no ,display_name);
 
                                         //firebaseMethods.addNewUser(email, username, " ", " ", " ", 1234567);
 

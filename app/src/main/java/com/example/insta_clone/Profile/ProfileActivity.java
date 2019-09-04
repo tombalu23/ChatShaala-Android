@@ -1,7 +1,9 @@
 package com.example.insta_clone.Profile;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -35,36 +37,47 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        edit_profile_tv=findViewById(R.id.textEditProfile);
-        profile_progress=findViewById(R.id.profileProgressBar);
-        profile_progress.setVisibility(View.INVISIBLE);
+
+
         mProfilePhoto=findViewById(R.id.profile_image);
 
         //Edit Profile Button
-        edit_profile_tv.setOnClickListener(new View.OnClickListener() {
+    /*    edit_profile_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 account_settings accountSettings=new account_settings();
 
                 //FragmentNumber of EditProfileFragment is 0
             }
-        });
+        });*/
 
-        setupBottomNav();
-        setupToolbar();
+        //setupBottomNav();
+        //setupToolbar();
 
         //To load Profile Picture
-        initImageLoader();
-        setProfileImage();
+        //initImageLoader();
+        //setProfileImage();
 
         //To load Gridview Images
-        tempGridSetup();
+        //tempGridSetup();
+
+        init();
 
 
     }
 
 
-    private void setupBottomNav() {
+    private void init(){
+        Log.d("profile error", "init: inflating " + getString(R.string.profile_fragment));
+
+        profile fragment = new profile();
+        FragmentTransaction transaction = ProfileActivity.this.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(getString(R.string.profile_fragment));
+        transaction.commit();
+    }
+
+  /*  private void setupBottomNav() {
         bottomNavigationView = findViewById(R.id.bottomNavViewBar);
         bottomNavigationHelper help = new bottomNavigationHelper();
         help.bottomNavigationSetup(bottomNavigationView, getApplicationContext());
@@ -118,7 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 */
 
-    private void initImageLoader(){
+  /*  private void initImageLoader(){
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
         ImageLoader.getInstance().init(universalImageLoader.getConfig());
     }
@@ -164,6 +177,6 @@ public class ProfileActivity extends AppCompatActivity {
         profile_progress.setVisibility(View.GONE);
         mProfilePhoto = (ImageView) findViewById(R.id.profile_photo);
     }
-
+*/
 
 }

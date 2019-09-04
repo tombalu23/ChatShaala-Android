@@ -7,11 +7,20 @@ public class Post {
     URI image;
     User user;
     String Description;
+    String Title;
     int Upvote;
     int Downvote;
     Comment[] comments;
 
-    public Post(String postid, URI image, User user, String description, int upvote, int downvote, Comment[] comments) {
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public Post(String postid, URI image, User user, String Title, String description, int upvote, int downvote, Comment[] comments) {
         this.postid = postid;
         this.image = image;
         this.user = user;
@@ -19,6 +28,7 @@ public class Post {
         Upvote = upvote;
         Downvote = downvote;
         this.comments = comments;
+        this.Title = Title;
     }
 
     public String getPostid() {

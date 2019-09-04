@@ -49,6 +49,20 @@ Modified Login XML slightly-->
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
+                android:hint="Username"
+                android:id="@+id/input_username"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
                 android:hint="Full Name"
                 android:id="@+id/input_full_name"/>
 
@@ -68,12 +82,27 @@ Modified Login XML slightly-->
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="College Name"
+                android:id="@+id/input_college_name"/>
+
+        </android.support.design.widget.TextInputLayout>
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,6 +147,7 @@ Modified Login XML slightly-->
         android:text="Please wait..."
         android:textColor="@color/black"
         android:textSize="20sp"
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/loginRequestLoadingProgressbar" />
 

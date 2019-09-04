@@ -8,15 +8,6 @@
         android:background="@color/white">
 
 
-        <!--Top Toolbar-->
-        <RelativeLayout
-            android:id="@+id/relLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <include layout="@layout/profile_top_bar"/>
-
-        </RelativeLayout>
 
 
         <!--Middle Section-->
@@ -84,24 +75,18 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
-                <TextView
-                    android:id="@+id/collegeName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Amrita Vishwa Vidyapeetham"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"/>
+
 
                 <TextView
-                    android:id="@+id/descriptionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Computer Science and Engineering"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    />
+                android:id="@+id/descriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Computer Science and Engineering"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
 
 
             </LinearLayout>

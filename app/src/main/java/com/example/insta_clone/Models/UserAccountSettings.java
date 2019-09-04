@@ -17,9 +17,9 @@ public class UserAccountSettings {
     private String username;
    // private String website;
 
-    public UserAccountSettings(String description, String display_name, long followers, long following,
+    public UserAccountSettings(String college_name, String display_name, long followers, long following,
                                long posts, String profile_photo, String username) {
-        this.college_name = description;
+        this.college_name = college_name;
         this.display_name = display_name;
         this.followers = followers;
         this.following = following;

@@ -85,7 +85,7 @@
             app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
-            android:id="@+id/textEditProfile"
+            android:id="@+id/btn_EditProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit your profile"

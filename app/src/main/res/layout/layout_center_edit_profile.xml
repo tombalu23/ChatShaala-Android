@@ -52,7 +52,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/username"
+                android:id="@+id/edit_username"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="40dp"
                 android:background="@null"
@@ -79,7 +79,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/display_name"
+                android:id="@+id/edit_display_name"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="40dp"
                 android:background="@null"
@@ -106,7 +106,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/college"
+                android:id="@+id/edit_college"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="40dp"
                 android:background="@null"
@@ -116,7 +116,7 @@
 
 
         <!-- description section -->
-        <RelativeLayout
+       <!-- <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/relLayout3"
@@ -133,21 +133,21 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/description"
+                android:id="@+id/edit_description"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="40dp"
                 android:background="@null"
                 android:inputType="textNoSuggestions"
                 android:hint="Description"/>
 
-        </RelativeLayout>
+        </RelativeLayout>-->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:text="PRIVATE INFORMATION"
-            android:layout_below="@id/relLayout4"
+            android:layout_below="@id/relLayout3"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
             android:textColor="@color/black"
@@ -172,7 +172,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/email"
+                android:id="@+id/edit_email"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="40dp"
                 android:background="@null"
@@ -198,7 +198,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/phoneNumber"
+                android:id="@+id/edit_phoneNumber"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="40dp"
                 android:background="@null"

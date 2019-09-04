@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.insta_clone.Models.User;
+import com.example.insta_clone.Models.UserAccountSettings;
+import com.example.insta_clone.Models.UserSettings;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -78,7 +80,7 @@ public class FirebaseMethods {
     /**
      * Register a new email and password with Firebase Authentication
      */
-    public void registerNewEmail(final String email, final String password, final String username, final String website, final String profile_photo, final long mobile_no){
+    public void registerNewEmail(final String email, final String password, final String username, final String college_name, final String profile_photo, final long mobile_no, final String display_name){
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -98,7 +100,7 @@ public class FirebaseMethods {
                             userID = mAuth.getCurrentUser().getUid();
                             Toast.makeText(mContext, R.string.auth_success, Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onComplete: Authstate changed: " + userID);
-                            addNewUser(email, username, "Amrita Vishwa Vidyapeetham", website, profile_photo, mobile_no);
+                            addNewUser(email, username, college_name, display_name, profile_photo, mobile_no);
 
                         }
 
@@ -106,17 +108,109 @@ public class FirebaseMethods {
                 });
     }
 
-    public void addNewUser(String email, String username, String college_name, String website, String profile_photo, long mobile_no){
+    public void addNewUser(String email, String username, String college_name, String display_name ,String profile_photo, long mobile_no){
 
         User user = new User( userID, email, username, mobile_no);
-
+        UserAccountSettings userAccountSettings= new UserAccountSettings(college_name,display_name,0,0,0,profile_photo,username);
         myRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)
                 .setValue(user);
+        myRef.child("user-account-settings")
+                .child(userID)
+                .setValue(userAccountSettings);
         Log.d(TAG, "addNewUser: added new user");
         Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
 
     }
+
+    public void UpdateUserName(String username){
+
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.dbfield_username))
+                .setValue(username);
+        myRef.child("user-account-settings")
+                .child(userID)
+                .child("username")
+                .setValue(username);
+
+    }
+
+
+    public UserSettings getUserSettings(DataSnapshot dataSnapshot){
+
+        Log.d(TAG, "getUserSettings: retrieving user settigns from firebase..");
+        User user = new User();
+        UserAccountSettings settings = new UserAccountSettings();
+        for(DataSnapshot ds: dataSnapshot.getChildren()) {
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
+                Log.d(TAG, "getUserSettings: Datasnapshot" + ds);
+
+                try {
+
+                    settings.setDisplay_name(
+                            ds.child(userID).getValue(UserAccountSettings.class).getDisplay_name()
+                    );
+
+                    settings.setCollege_name(
+                            ds.child(userID).getValue(UserAccountSettings.class).getCollege_name()
+                    );
+
+                    settings.setFollowers(
+                            ds.child(userID).getValue(UserAccountSettings.class).getFollowers()
+                    );
+
+                    settings.setFollowing(
+                            ds.child(userID).getValue(UserAccountSettings.class).getFollowing()
+                    );
+
+                    settings.setPosts(
+                            ds.child(userID).getValue(UserAccountSettings.class).getPosts()
+                    );
+
+                    settings.setProfile_photo(
+                            ds.child(userID).getValue(UserAccountSettings.class).getProfile_photo()
+                    );
+
+                    settings.setUsername(
+                            ds.child(userID).getValue(UserAccountSettings.class).getUsername()
+                    );
+
+                } catch (Exception e) {
+                    Log.d(TAG, "getUserSettings: SettingsException " + e.getMessage());
+                }
+            }
+
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_users))) {
+                Log.d(TAG, "getUser: Datasnapshot" + ds);
+                try {
+
+                    user.setEmail(
+                            ds.child(userID).getValue(User.class).getEmail()
+                    );
+
+                    user.setMobile_no(
+                            ds.child(userID).getValue(User.class).getMobile_no()
+                    );
+
+                    user.setUser_id(
+                            ds.child(userID).getValue(User.class).getUser_id()
+                    );
+
+                    user.setUsername(
+                            ds.child(userID).getValue(User.class).getUsername()
+                    );
+                } catch (Exception e) {
+                    Log.d(TAG, "getUserSettings: UserException" + e.getMessage());
+                }
+
+
+            }
+        }
+
+        return new UserSettings(user , settings);
+    }
+
 
 
 
