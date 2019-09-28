@@ -4,31 +4,26 @@ import java.net.URI;
 
 public class Post {
     String postid;
-    URI image;
-    User user;
-    String Description;
-    String Title;
-    int Upvote;
-    int Downvote;
-    Comment[] comments;
+    String image;
+    String user;
+    String description;
+    String title;
+    int upvote;
+    int downvote;
+    int comment_count;
 
-    public String getTitle() {
-        return Title;
+    public Post() {
     }
 
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public Post(String postid, URI image, User user, String Title, String description, int upvote, int downvote, Comment[] comments) {
+    public Post(String postid, String image, String user, String description, String title, int upvote, int downvote, int comment_count) {
         this.postid = postid;
         this.image = image;
         this.user = user;
-        Description = description;
-        Upvote = upvote;
-        Downvote = downvote;
-        this.comments = comments;
-        this.Title = Title;
+        this.description = description;
+        this.title = title;
+        this.upvote = upvote;
+        this.downvote = downvote;
+        this.comment_count = comment_count;
     }
 
     public String getPostid() {
@@ -39,51 +34,59 @@ public class Post {
         this.postid = postid;
     }
 
-    public URI getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(URI image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getUpvote() {
-        return Upvote;
+        return upvote;
     }
 
     public void setUpvote(int upvote) {
-        Upvote = upvote;
+        this.upvote = upvote;
     }
 
     public int getDownvote() {
-        return Downvote;
+        return downvote;
     }
 
     public void setDownvote(int downvote) {
-        Downvote = downvote;
+        this.downvote = downvote;
     }
 
-    public Comment[] getComments() {
-        return comments;
+    public int getComment_count() {
+        return comment_count;
     }
 
-    public void setComments(Comment[] comments) {
-        this.comments = comments;
+    public void setComment_count(int comment_count) {
+        this.comment_count = comment_count;
     }
 }

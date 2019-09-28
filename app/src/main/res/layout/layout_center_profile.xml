@@ -99,7 +99,7 @@
                 android:layout_marginBottom="50dp">
 
                 <GridView
-                    android:id="@+id/imagesGridView"
+                    android:id="@+id/profileImagesGridView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"

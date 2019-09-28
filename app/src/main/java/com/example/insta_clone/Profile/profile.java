@@ -16,13 +16,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.example.insta_clone.FirebaseMethods;
+import com.example.insta_clone.GridImageAdapter;
+import com.example.insta_clone.Models.Post;
 import com.example.insta_clone.Models.UserSettings;
 import com.example.insta_clone.R;
 import com.example.insta_clone.UniversalImageLoader;
@@ -33,9 +37,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -64,15 +71,17 @@ public class profile extends Fragment {
     private BottomNavigationView bottomNavigationView;
     private FirebaseMethods firebaseMethods;
     private Context mContext;
-
+    private RelativeLayout relativeLayout;
+    int number_grid_columns = 3;
     ImageLoader mImageLoader;
     UniversalImageLoader universalImageLoader;
-
+    View view;
+    String userID;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         mDisplayName = (TextView) view.findViewById(R.id.display_name);
         mUsername = (TextView) view.findViewById(R.id.profileName);
         mDescription = (TextView) view.findViewById(R.id.descriptionText);
@@ -81,11 +90,12 @@ public class profile extends Fragment {
         mFollowers = (TextView) view.findViewById(R.id.tvFollowers);
         mFollowing = (TextView) view.findViewById(R.id.tvFollowing);
         mProgressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
-        gridView = (GridView) view.findViewById(R.id.gridImageView);
+        gridView = (GridView) view.findViewById(R.id.profileImagesGridView);
         toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileMenu);
         bottomNavigationView = (BottomNavigationView) view.findViewById(R.id.bottomNavViewBar);
         mbtn_editprofile = (TextView)view.findViewById(R.id.btn_EditProfile);
+        relativeLayout = (RelativeLayout)view.findViewById(R.id.relLayoutProfileCenter);
         mContext = getActivity();
         initImageLoader();
         firebaseMethods = new FirebaseMethods(mContext);
@@ -94,8 +104,9 @@ public class profile extends Fragment {
 
         setupBottomNavigationView();
         setupToolbar();
+        relativeLayout.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
         setupFirebaseAuth();
-
         return view;
     }
 
@@ -156,7 +167,6 @@ public class profile extends Fragment {
     public void SetProfileWidgets(UserSettings userSettings){
 
         Log.d(TAG, "SetProfileWidgets: setting profile widgets" + userSettings);
-
         universalImageLoader.setImage(userSettings.getUserAccountSettings().getProfile_photo(), mProfilePhoto,null,"");
         mDisplayName.setText(userSettings.getUserAccountSettings().getDisplay_name());
         mDescription.setText(userSettings.getUserAccountSettings().getCollege_name());
@@ -164,6 +174,7 @@ public class profile extends Fragment {
         mFollowing.setText(String.valueOf(userSettings.getUserAccountSettings().getFollowing()));
         mPosts.setText(String.valueOf(userSettings.getUserAccountSettings().getPosts()));
         mUsername.setText(userSettings.getUser().getUsername());
+        tempGridSetup();
 
     }
     private void setupFirebaseAuth(){
@@ -172,6 +183,7 @@ public class profile extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+        userID = mAuth.getCurrentUser().getUid();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -203,9 +215,15 @@ public class profile extends Fragment {
 
                 //retrieve user information from the database
                 Log.d(TAG, "onDataChange: "+ dataSnapshot);
+
+
+
                 UserSettings userSettings = firebaseMethods.getUserSettings(dataSnapshot);
                 SetProfileWidgets(userSettings);
+                //tempGridSetup();
 
+                relativeLayout.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
                 //retrieve images for the user in question
 
             }
@@ -217,6 +235,7 @@ public class profile extends Fragment {
 
 
     }
+
 
 
     @Override
@@ -232,4 +251,45 @@ public class profile extends Fragment {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-}
+  private void tempGridSetup(){
+        ArrayList<String> imgURLs = new ArrayList<>();
+
+        DatabaseReference postref = FirebaseDatabase.getInstance().getReference("user-posts/"+userID);
+        postref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> UserPosts= new ArrayList<String>();
+                Post post = new Post();
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                   post = ds.getValue(Post.class);
+                   imgURLs.add(post.getImage());
+                }
+                setupImageGrid(imgURLs);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+    }
+
+    private void setupImageGrid(ArrayList<String> imgURLs){
+        GridView gridView = (GridView) view.findViewById(R.id.profileImagesGridView);
+
+        GridImageAdapter adapter = new GridImageAdapter(view.getContext(), R.layout.layout_grid_imageview , "", imgURLs);
+        gridView.setAdapter(adapter);
+    }
+
+
+
+  }
+
+
+

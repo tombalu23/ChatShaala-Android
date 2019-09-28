@@ -2,14 +2,18 @@ package com.example.insta_clone;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.insta_clone.Models.Post;
 import com.example.insta_clone.Models.User;
 import com.example.insta_clone.Models.UserAccountSettings;
 import com.example.insta_clone.Models.UserSettings;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 /**
  * NOTE by Balaji 21-08-2019
@@ -30,6 +37,7 @@ public class FirebaseMethods {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     DatabaseReference userRef;
+    private StorageReference mStorageRef;
     private static final String TAG = "FirebaseMethods";
 
     //firebase
@@ -38,6 +46,7 @@ public class FirebaseMethods {
     private String userID;
 
     private Context mContext;
+    private String image;
 
 
     public FirebaseMethods(Context context) {
@@ -48,6 +57,7 @@ public class FirebaseMethods {
         myRef = mFirebaseDatabase.getReference();
 
         userRef= mFirebaseDatabase.getReference("users");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
         if(mAuth.getCurrentUser() != null){
@@ -76,6 +86,8 @@ public class FirebaseMethods {
         }
         return false;
     }
+
+
 
     /**
      * Register a new email and password with Firebase Authentication
@@ -135,6 +147,115 @@ public class FirebaseMethods {
                 .setValue(username);
 
     }
+
+    public void UpdateDisplayName(String displayname){
+
+        myRef.child("user-account-settings")
+                .child(userID)
+                .child("display_name")
+                .setValue(displayname);
+
+
+    }
+    public void UpdateCollegeName(String collegename){
+
+        myRef.child("user-account-settings")
+                .child(userID)
+                .child("college_name")
+                .setValue(collegename);
+
+
+    }
+
+    public void UpdateProfilePhoto(String string){
+        if(string == null)
+            return;
+        myRef.child("user-account-settings")
+                    .child(userID)
+                    .child("profile_photo")
+                    .setValue(string);
+
+
+
+    }
+
+    public void UploadProfilePhoto(Uri uri){
+
+     StorageReference riversRef = mStorageRef.child("images/users/"+userID+".jpg");
+       /* riversRef.putFile(uri)
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(mContext, "Your Picture Saved Successfully",Toast.LENGTH_SHORT).show();
+                            String Downloadurl = task.getResult().getStorage().getDownloadUrl().toString();
+                            while(!Downloadurl.is)
+                            UpdateProfilePhoto(Downloadurl);
+                        }
+                    }
+
+                });*/
+
+        riversRef.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                       Task<Uri> UriDownload = taskSnapshot.getStorage().getDownloadUrl();
+                       while(!UriDownload.isComplete());
+                       Uri url = UriDownload.getResult();
+                       String urlstring = url.toString();
+                       UpdateProfilePhoto(urlstring);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
+
+
+    }
+
+    public void UploadPostPhoto(Uri uri, String postID, Post post){
+        StorageReference riversRef = mStorageRef.child("images/posts/"+userID+"/"+postID+".jpg");
+        riversRef.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        Task<Uri> UriDownload = taskSnapshot.getStorage().getDownloadUrl();
+                        while(!UriDownload.isComplete());
+                        Uri url = UriDownload.getResult();
+                        String urlstring = url.toString();
+                        UpdatePostPhoto(urlstring,post );
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
+    }
+
+    public void UpdatePostPhoto(String string, Post post){
+        myRef.child("posts")
+                .child(post.getPostid())
+                .child("image")
+                .setValue(string);
+        myRef.child("user-posts")
+                .child(userID)
+                .child(post.getPostid())
+                .child("image")
+                .setValue(string);
+
+    }
+
+
 
 
     public UserSettings getUserSettings(DataSnapshot dataSnapshot){
@@ -210,6 +331,138 @@ public class FirebaseMethods {
 
         return new UserSettings(user , settings);
     }
+    public String getPhotoForUser(String user)
+    {
+    DatabaseReference imageref = myRef.child(mContext.getString(R.string.dbname_user_account_settings)).child(user).child("profile_photo");
+     imageref.addListenerForSingleValueEvent(new ValueEventListener() {
+         @Override
+         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            image = (String) dataSnapshot.getValue();
+
+         }
+
+         @Override
+         public void onCancelled(@NonNull DatabaseError databaseError) {
+
+         }
+     });
+
+      return  image;
+    }
+
+
+    public UserSettings getUserSettingsForUserID(DataSnapshot dataSnapshot, String UserID){
+
+        Log.d(TAG, "getUserSettings: retrieving user settigns from firebase..");
+        User user = new User();
+        UserAccountSettings settings = new UserAccountSettings();
+
+
+        for(DataSnapshot ds: dataSnapshot.getChildren()) {
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_user_account_settings))) {
+                Log.d(TAG, "getUserSettings: Datasnapshot" + ds);
+
+                try {
+
+                    settings.setDisplay_name(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getDisplay_name()
+                    );
+
+                    settings.setCollege_name(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getCollege_name()
+                    );
+
+                    settings.setFollowers(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getFollowers()
+                    );
+
+                    settings.setFollowing(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getFollowing()
+                    );
+
+                    settings.setPosts(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getPosts()
+                    );
+
+                    settings.setProfile_photo(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getProfile_photo()
+                    );
+
+                    settings.setUsername(
+                            ds.child(UserID).getValue(UserAccountSettings.class).getUsername()
+                    );
+
+                } catch (Exception e) {
+                    Log.d(TAG, "getUserSettings: SettingsException " + e.getMessage());
+                }
+            }
+
+            if (ds.getKey().equals(mContext.getString(R.string.dbname_users))) {
+                Log.d(TAG, "getUser: Datasnapshot" + ds);
+                try {
+
+                    user.setEmail(
+                            ds.child(UserID).getValue(User.class).getEmail()
+                    );
+
+                    user.setMobile_no(
+                            ds.child(UserID).getValue(User.class).getMobile_no()
+                    );
+
+                    user.setUser_id(
+                            ds.child(UserID).getValue(User.class).getUser_id()
+                    );
+
+                    user.setUsername(
+                            ds.child(UserID).getValue(User.class).getUsername()
+                    );
+                } catch (Exception e) {
+                    Log.d(TAG, "getUserSettings: UserException" + e.getMessage());
+                }
+
+
+            }
+        }
+
+        return new UserSettings(user , settings);
+    }
+
+
+    public void UploadPost(Post post)
+    {
+
+        myRef.child("posts")
+                .child(post.getPostid())
+                .setValue(post);
+        myRef.child("user-posts")
+                .child(userID)
+                .child(post.getPostid())
+                .setValue(post);
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserSettings userSettings = getUserSettings(dataSnapshot);
+                inc_count(userSettings);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    public void inc_count(UserSettings userSettings){
+
+        myRef.child("user-account-settings")
+                .child(userID)
+                .child("posts")
+                .setValue(userSettings.getUserAccountSettings().getPosts()+1);
+    }
+
 
 
 

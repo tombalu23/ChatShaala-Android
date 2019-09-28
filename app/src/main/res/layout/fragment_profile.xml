@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relLayout1"
-        android:id="@+id/relLayout2">
+        android:id="@+id/relLayoutProfileCenter">
 
         <include layout="@layout/layout_center_profile"/>
 
@@ -28,7 +28,8 @@
         android:layout_height="150dp"
         android:id="@+id/profileProgressBar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp"
+        android:visibility="gone"/>
 
     <include layout="@layout/layout_bottom_navigation_view"/>
 

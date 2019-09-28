@@ -3,12 +3,30 @@ package com.example.insta_clone.Home;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.example.insta_clone.Adapters.Posts_listView_Adapter;
+import com.example.insta_clone.Models.Post;
+import com.example.insta_clone.Models.UserSettings;
 import com.example.insta_clone.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -28,8 +46,17 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ArrayList<Post> posts = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private View view;
+    private ListView listView;
 
     private OnFragmentInteractionListener mListener;
+    private String userID;
+    private DatabaseReference postsRef;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -66,7 +93,12 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        listView = view.findViewById(R.id.home_list_view);
+        setupFirebaseAuth();
+        getHomePagePosts();
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -108,5 +140,63 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    private void setupFirebaseAuth(){
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+        userID = mAuth.getCurrentUser().getUid();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
+
+
+
+    }
+
+
+    public void getHomePagePosts(){
+
+
+       postsRef = myRef.child("posts");
+       postsRef.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+             Post post = new Post();
+             for(DataSnapshot ds: dataSnapshot.getChildren()){
+                 post = ds.getValue(Post.class);
+
+                 posts.add(post);
+             }
+               Posts_listView_Adapter posts_listView_adapter = new Posts_listView_Adapter(getContext(), posts);
+
+               listView.setAdapter(posts_listView_adapter);
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+       });
+
+
+
     }
 }

@@ -22,15 +22,17 @@
             app:civ_border_width="2dp"
             android:layout_centerHorizontal="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="30dp"
             android:text="Change Photo"
+            android:background="@color/white"
             android:id="@+id/changeProfilePhoto"
             android:layout_below="@+id/profile_photo"
             android:layout_centerHorizontal="true"
             android:textColor="@color/link_blue"
-            android:textSize="16sp"/>
+            android:textSize="13sp" />
+
 
 
 
