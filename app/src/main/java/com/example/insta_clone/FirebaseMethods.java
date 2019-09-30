@@ -38,6 +38,7 @@ public class FirebaseMethods {
     private DatabaseReference myRef;
     DatabaseReference userRef;
     private StorageReference mStorageRef;
+    private String imageURL = "Yes";
     private static final String TAG = "FirebaseMethods";
 
     //firebase
@@ -461,6 +462,14 @@ public class FirebaseMethods {
                 .child(userID)
                 .child("posts")
                 .setValue(userSettings.getUserAccountSettings().getPosts()+1);
+    }
+
+    public String return_photo(DataSnapshot dataSnapshot){
+
+        UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
+        imageURL = userAccountSettings.getProfile_photo();
+
+        return imageURL;
     }
 
 

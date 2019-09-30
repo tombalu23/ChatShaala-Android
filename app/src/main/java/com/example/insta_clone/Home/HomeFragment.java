@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.insta_clone.Adapters.Posts_listView_Adapter;
+import com.example.insta_clone.FirebaseMethods;
 import com.example.insta_clone.Models.Post;
 import com.example.insta_clone.Models.UserSettings;
 import com.example.insta_clone.R;
@@ -53,10 +54,11 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     private DatabaseReference myRef;
     private View view;
     private ListView listView;
-
+    private FirebaseMethods firebaseMethods;
     private OnFragmentInteractionListener mListener;
     private String userID;
     private DatabaseReference postsRef;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -96,6 +98,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         listView = view.findViewById(R.id.home_list_view);
         setupFirebaseAuth();
+        firebaseMethods = new FirebaseMethods(view.getContext());
         getHomePagePosts();
 
         return view;
@@ -166,10 +169,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
             }
         };
 
-
-
     }
-
 
     public void getHomePagePosts(){
 
@@ -185,8 +185,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
                  posts.add(post);
              }
-               Posts_listView_Adapter posts_listView_adapter = new Posts_listView_Adapter(getContext(), posts);
 
+               Posts_listView_Adapter posts_listView_adapter = new Posts_listView_Adapter(getContext(), posts);
                listView.setAdapter(posts_listView_adapter);
            }
 

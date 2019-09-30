@@ -48,7 +48,7 @@ public class Posts_listView_Adapter extends BaseAdapter {
     private FirebaseMethods firebaseMethods;
     UserSettings userSettings;
     UserAccountSettings settings;
-
+    String imageURL;
     public Posts_listView_Adapter(Context context, List<Post> post) {
 
         result = post;
@@ -95,13 +95,20 @@ public class Posts_listView_Adapter extends BaseAdapter {
         title.setText(result.get(position).getTitle());
         description.setText(result.get(position).getDescription());
 
+        DatabaseReference firebaserefernce = myRef.child("user-account-settings").child(result.get(position).getUser());
+        firebaserefernce.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                imageURL = firebaseMethods.return_photo(dataSnapshot);
+                universalImageLoader.setImage(imageURL,authorimageview, null, "");
+                universalImageLoader.setImage(result.get(position).getImage(), postImageView, null, "");
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        String imageURL = firebaseMethods.getPhotoForUser(result.get(position).getUser());
-
-        universalImageLoader.setImage(imageURL,authorimageview, null, "");
-        universalImageLoader.setImage(result.get(position).getImage(), postImageView, null, "");
-
+            }
+        });
         return view;
     }
 
