@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.example.insta_clone.FirebaseMethods;
+import com.example.insta_clone.Follow.FollowingList;
 import com.example.insta_clone.GridImageAdapter;
 import com.example.insta_clone.Models.Post;
 import com.example.insta_clone.Models.UserSettings;
@@ -107,6 +108,16 @@ public class profile extends Fragment {
         relativeLayout.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         setupFirebaseAuth();
+
+        mFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), FollowingList.class);
+                intent.putExtra("userID", userID);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 

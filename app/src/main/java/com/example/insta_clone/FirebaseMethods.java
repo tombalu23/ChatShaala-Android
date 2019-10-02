@@ -472,6 +472,96 @@ public class FirebaseMethods {
         return imageURL;
     }
 
+    public void followUser (String followUserID){
+        myRef.child("follow").child(userID).child(followUserID).setValue("true");
+
+
+        myRef.child("following").child(followUserID).child(userID).setValue("true");
+
+        DatabaseReference followUserRef = myRef.child("user-account-settings").child(followUserID);
+        DatabaseReference userRef = myRef.child("user-account-settings").child(userID);
+
+        UserAccountSettings followUserSettings = new UserAccountSettings();
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserAccountSettings userSettings = new UserAccountSettings();
+                userSettings=dataSnapshot.getValue(UserAccountSettings.class);
+                userRef.child("following").setValue(userSettings.getFollowing()+1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        followUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserAccountSettings userSettings = new UserAccountSettings();
+                userSettings=dataSnapshot.getValue(UserAccountSettings.class);
+                followUserRef.child("followers").setValue(userSettings.getFollowers()+1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+
+
+
+
+    public void unfollowUser (String followUserID){
+
+        myRef.child("follow").child(userID).child(followUserID).removeValue();
+
+        myRef.child("following").child(followUserID).child(userID).removeValue();
+
+        DatabaseReference followUserRef = myRef.child("user-account-settings").child(followUserID);
+        DatabaseReference userRef = myRef.child("user-account-settings").child(userID);
+
+        UserAccountSettings followUserSettings = new UserAccountSettings();
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserAccountSettings userSettings = new UserAccountSettings();
+                userSettings=dataSnapshot.getValue(UserAccountSettings.class);
+                userRef.child("following").setValue(userSettings.getFollowing()-1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        followUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserAccountSettings userSettings = new UserAccountSettings();
+                userSettings=dataSnapshot.getValue(UserAccountSettings.class);
+                followUserRef.child("followers").setValue(userSettings.getFollowers()-1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+
+
 
 
 

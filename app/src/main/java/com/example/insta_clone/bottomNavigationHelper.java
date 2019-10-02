@@ -35,6 +35,9 @@ public class bottomNavigationHelper extends AppCompatActivity {
 
 
                         case R.id.ic_search:
+                            Intent intent2 = new Intent(context, Search.class);//ACTIVITY_NUM = 2
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent2);
                             break;
 
                         case R.id.ic_person:

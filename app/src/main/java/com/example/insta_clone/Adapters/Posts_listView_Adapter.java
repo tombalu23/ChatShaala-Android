@@ -1,9 +1,14 @@
 package com.example.insta_clone.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,11 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.insta_clone.FirebaseMethods;
+import com.example.insta_clone.Home.HomeActivity;
 import com.example.insta_clone.Models.Post;
 import com.example.insta_clone.Models.UserAccountSettings;
 import com.example.insta_clone.Models.UserSettings;
+import com.example.insta_clone.Profile.Friendprofile;
 import com.example.insta_clone.R;
 import com.example.insta_clone.UniversalImageLoader;
+import com.example.insta_clone.bottomNavigationHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -109,6 +117,15 @@ public class Posts_listView_Adapter extends BaseAdapter {
 
             }
         });
+        authorimageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, Friendprofile.class);
+                intent.putExtra("userID", result.get(position).getUser());
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -141,6 +158,7 @@ public class Posts_listView_Adapter extends BaseAdapter {
                 // ...
             }
         };
+
 
 
 }}

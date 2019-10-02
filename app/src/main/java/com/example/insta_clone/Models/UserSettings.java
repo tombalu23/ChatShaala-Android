@@ -5,6 +5,9 @@ public class UserSettings {
     private User user;
     private UserAccountSettings userAccountSettings;
 
+    public UserSettings() {
+    }
+
     public UserSettings(User user, UserAccountSettings userAccountSettings) {
         this.user = user;
         this.userAccountSettings = userAccountSettings;
