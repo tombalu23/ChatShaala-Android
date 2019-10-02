@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Follow.FollowingList"></activity>
+        <activity android:name=".Follow.FollowerList"></activity>
+        <activity android:name=".Follow.FollowingList" />
         <activity android:name=".Search" />
         <activity android:name=".Profile.Friendprofile" />
         <activity android:name=".ImageUpload.ImagePickerActivity" />

@@ -22,9 +22,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.insta_clone.FirebaseMethods;
+import com.example.insta_clone.Follow.FollowerList;
 import com.example.insta_clone.Follow.FollowingList;
 import com.example.insta_clone.GridImageAdapter;
 import com.example.insta_clone.Models.Post;
@@ -112,9 +114,22 @@ public class profile extends Fragment {
         mFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getActivity().getApplicationContext(), FollowingList.class);
                 intent.putExtra("userID", userID);
-                startActivity(intent);
+                getActivity().startActivity(intent);
+
+            }
+        });
+
+        mFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), FollowerList.class);
+                intent.putExtra("userID", userID);
+                getActivity().startActivity(intent);
+
             }
         });
 

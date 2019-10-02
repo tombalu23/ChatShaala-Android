@@ -64,7 +64,7 @@ public class Friendprofile extends AppCompatActivity {
     UniversalImageLoader universalImageLoader;
     private FirebaseMethods firebaseMethods;
     private TextView followButton;
-    boolean followStatus;
+    boolean followStatus = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +89,7 @@ public class Friendprofile extends AppCompatActivity {
         firebaseMethods = new FirebaseMethods(getApplicationContext());
         isFollow(currentUserID, userID);
 
-        if(followStatus == false){
-            followButton.setText("Follow");
-            followButton.setBackgroundColor(getColor(android.R.color.holo_blue_light));
-        }
-        else{
-            followButton.setText("Unfollow");
-            followButton.setBackgroundColor(getColor(android.R.color.holo_red_light));
-        }
+
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +114,7 @@ public class Friendprofile extends AppCompatActivity {
         });
 
     }
+
 
     public void SetProfileWidgets(UserSettings userSettings) {
 
@@ -242,12 +236,14 @@ public class Friendprofile extends AppCompatActivity {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     if(ds.getValue().equals(followUserID)) {
                         isFollowAssign(true);
+                        break;
                     }
                      else
                     {isFollowAssign(false);
 
                     }
                 }
+                checkFollow();
             }
 
             @Override
@@ -261,4 +257,21 @@ public class Friendprofile extends AppCompatActivity {
         followStatus = status;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+
+    public void checkFollow(){
+        if(followStatus == false){
+            followButton.setText("Follow");
+            followButton.setBackgroundColor(getColor(android.R.color.holo_blue_light));
+        }
+        else{
+            followButton.setText("Unfollow");
+            followButton.setBackgroundColor(getColor(android.R.color.holo_red_light));
+        }
+    }
 }

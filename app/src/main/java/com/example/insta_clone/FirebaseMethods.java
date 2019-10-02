@@ -473,10 +473,10 @@ public class FirebaseMethods {
     }
 
     public void followUser (String followUserID){
-        myRef.child("follow").child(userID).child(followUserID).setValue("true");
+        myRef.child("follow").child(userID).child(followUserID).setValue(followUserID);
 
 
-        myRef.child("following").child(followUserID).child(userID).setValue("true");
+        myRef.child("following").child(followUserID).child(userID).setValue(userID);
 
         DatabaseReference followUserRef = myRef.child("user-account-settings").child(followUserID);
         DatabaseReference userRef = myRef.child("user-account-settings").child(userID);
