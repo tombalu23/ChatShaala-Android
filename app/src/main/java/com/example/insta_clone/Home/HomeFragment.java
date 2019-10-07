@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +15,6 @@ import android.widget.ListView;
 import com.example.insta_clone.Adapters.Posts_listView_Adapter;
 import com.example.insta_clone.FirebaseMethods;
 import com.example.insta_clone.Models.Post;
-import com.example.insta_clone.Models.UserSettings;
 import com.example.insta_clone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,6 +57,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
     private String userID;
     private DatabaseReference postsRef;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public HomeFragment() {
@@ -100,7 +100,9 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         setupFirebaseAuth();
         firebaseMethods = new FirebaseMethods(view.getContext());
         getHomePagePosts();
-
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setOnRefreshListener(this::getHomePagePosts);
         return view;
     }
 
@@ -144,7 +146,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    private void setupFirebaseAuth(){
+
+    private void setupFirebaseAuth() {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
 
         mAuth = FirebaseAuth.getInstance();
@@ -152,50 +155,42 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         myRef = mFirebaseDatabase.getReference();
         userID = mAuth.getCurrentUser().getUid();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
+        mAuthListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                // User is signed in
+                Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+            } else {
+                // User is signed out
+                Log.d(TAG, "onAuthStateChanged:signed_out");
             }
         };
 
     }
 
-    public void getHomePagePosts(){
+    public void getHomePagePosts() {
+        postsRef = myRef.child("posts");
+        Posts_listView_Adapter posts_listView_adapter = new Posts_listView_Adapter(getContext(), posts);
+        listView.setAdapter(posts_listView_adapter);
+        postsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Post post;
+                posts.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    post = ds.getValue(Post.class);
+                    posts.add(post);
+                }
+                System.out.println("Trigger Post Adapter");
+                posts_listView_adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-       postsRef = myRef.child("posts");
-       postsRef.addValueEventListener(new ValueEventListener() {
-           @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-             Post post = new Post();
-             for(DataSnapshot ds: dataSnapshot.getChildren()){
-                 post = ds.getValue(Post.class);
-
-                 posts.add(post);
-             }
-
-               Posts_listView_Adapter posts_listView_adapter = new Posts_listView_Adapter(getContext(), posts);
-               listView.setAdapter(posts_listView_adapter);
-           }
-
-           @Override
-           public void onCancelled(@NonNull DatabaseError databaseError) {
-
-           }
-       });
-
+            }
+        });
 
 
     }

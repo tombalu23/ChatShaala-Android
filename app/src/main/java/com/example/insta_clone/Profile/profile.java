@@ -1,5 +1,6 @@
 package com.example.insta_clone.Profile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,8 @@ import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -80,6 +83,7 @@ public class profile extends Fragment {
     UniversalImageLoader universalImageLoader;
     View view;
     String userID;
+    private ActionBar actionBar;
 
     @Nullable
     @Override
@@ -106,7 +110,7 @@ public class profile extends Fragment {
 
 
         setupBottomNavigationView();
-        setupToolbar();
+//        setupToolbar();
         relativeLayout.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         setupFirebaseAuth();
@@ -136,23 +140,6 @@ public class profile extends Fragment {
         return view;
     }
 
-
-    /**
-     * Responsible for setting up the profile toolbar
-     */
-    private void setupToolbar(){
-
-        ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
-
-        profileMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating to account settings.");
-                Intent intent = new Intent(mContext, account_settings.class);
-                startActivity(intent);
-            }
-        });
-    }
 
     private void GotoEditPage(){
         Log.d("profile error", "init: inflating " + "Edit Profile");
@@ -199,7 +186,7 @@ public class profile extends Fragment {
         mFollowers.setText(String.valueOf(userSettings.getUserAccountSettings().getFollowers()));
         mFollowing.setText(String.valueOf(userSettings.getUserAccountSettings().getFollowing()));
         mPosts.setText(String.valueOf(userSettings.getUserAccountSettings().getPosts()));
-        mUsername.setText(userSettings.getUser().getUsername());
+        actionBar.setTitle(userSettings.getUser().getUsername());
         tempGridSetup();
 
     }
@@ -304,6 +291,13 @@ public class profile extends Fragment {
 
 
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        super.onAttach(context);
     }
 
     private void setupImageGrid(ArrayList<String> imgURLs){

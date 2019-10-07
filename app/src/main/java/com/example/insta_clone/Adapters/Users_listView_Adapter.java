@@ -33,6 +33,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class Users_listView_Adapter  extends BaseAdapter implements Filterable {
@@ -108,6 +109,7 @@ public class Users_listView_Adapter  extends BaseAdapter implements Filterable {
 
                 Intent intent = new Intent(context, Friendprofile.class);
                 intent.putExtra("userID", result.get(position));
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

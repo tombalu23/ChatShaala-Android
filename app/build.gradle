@@ -59,6 +59,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 
     implementation 'com.github.yalantis:ucrop:2.2.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 
 
 }
