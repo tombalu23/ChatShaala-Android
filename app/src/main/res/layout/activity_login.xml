@@ -35,7 +35,6 @@ Login XML from Github-->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="rajkumaar2304@gmail.com"
                 android:inputType="textEmailAddress"
                 android:hint="Email"
                 android:id="@+id/input_email"
@@ -52,7 +51,6 @@ Login XML from Github-->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="helloworld"
                 android:inputType="textPassword"
                 android:hint="Password"
                 android:id="@+id/input_password"/>
