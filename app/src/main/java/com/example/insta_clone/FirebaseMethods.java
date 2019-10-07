@@ -25,6 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * NOTE by Balaji 21-08-2019
@@ -462,10 +465,7 @@ public class FirebaseMethods {
                 .setValue(userSettings.getUserAccountSettings().getPosts()+1);
     }
 
-    public String return_photo(DataSnapshot dataSnapshot){
-
-        UserAccountSettings userAccountSettings = dataSnapshot.getValue(UserAccountSettings.class);
-        imageURL = userAccountSettings.getProfile_photo();
+    public String return_photo(DataSnapshot dataSnapshot, CircleImageView authorimageview,String postId){
 
         return imageURL;
     }

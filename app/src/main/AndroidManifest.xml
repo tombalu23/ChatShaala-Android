@@ -15,13 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Follow.FollowerList"></activity>
+        tools:ignore="GoogleAppIndexingWarning,InnerclassSeparator">
+        <activity android:name=".Follow.FollowerList" />
         <activity android:name=".Follow.FollowingList" />
-        <activity android:name=".Search" />
+        <activity android:name=".Search"
+            android:label="Search"/>
         <activity android:name=".Profile.Friendprofile" />
         <activity android:name=".ImageUpload.ImagePickerActivity" />
-        <activity android:name=".Posts.NewPostActivity" />
+        <activity android:name=".Posts.NewPostActivity"
+            android:label="Create a post"
+            android:parentActivityName=".Home.HomeActivity"/>
         <activity android:name=".Login_SignUp.SignUpActivity" />
         <activity android:name=".Login_SignUp.LoginActivity">
             <intent-filter>
@@ -31,8 +34,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".Profile.account_settings" />
-        <activity android:name=".Profile.ProfileActivity" />
-        <activity android:name=".Home.HomeActivity" />
+        <activity android:name=".Profile.ProfileActivity"
+            android:label="Profile"/>
+        <activity android:name=".Home.HomeActivity"
+            android:label="Home"
+            android:launchMode="singleTop"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

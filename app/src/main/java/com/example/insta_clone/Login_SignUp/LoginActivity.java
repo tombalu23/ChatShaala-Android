@@ -17,12 +17,14 @@ import android.widget.Toast;
 
 import com.example.insta_clone.Home.HomeActivity;
 import com.example.insta_clone.R;
+import com.example.insta_clone.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class LoginActivity extends AppCompatActivity {
@@ -34,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText input_password;
     String email;
     String password;
-    TextView mPleaseWaitText;
     ProgressBar mProgressBar;
+    SharedPreferences sp;
     private FirebaseAuth mAuth;
 
 
@@ -56,29 +58,20 @@ mAuth = FirebaseAuth.getInstance();
         input_email = findViewById(R.id.input_email);
         input_password = findViewById(R.id.input_password);
         mProgressBar = findViewById(R.id.loginRequestLoadingProgressbar);
-        mPleaseWaitText = findViewById(R.id.pleaseWaitText);
         email = input_email.getText().toString();
         password = input_password.getText().toString();
 
-        //Firebase
         mAuth = FirebaseAuth.getInstance();
+        sp = getSharedPreferences("My_Preferences", Context.MODE_PRIVATE);
+        if(sp.getBoolean("loggedin",false)){
+            finish();
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intent);
+        }
 
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(i);
-            }
-        });
-
-        sign_up_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivity(i);
-
-            }
+        sign_up_text.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
+            startActivity(i);
         });
 
         init();
@@ -94,64 +87,59 @@ mAuth = FirebaseAuth.getInstance();
     private void init(){
         mProgressBar.setVisibility(View.INVISIBLE);
         //initialize the button for logging in
-        Button btnLogin = (Button) findViewById(R.id.btn_login);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: attempting to log in.");
+        Button btnLogin = findViewById(R.id.btn_login);
+        btnLogin.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: attempting to log in.");
 
-                String email = input_email.getText().toString();
-                String password = input_password.getText().toString();
+            String email = input_email.getText().toString();
+            String password = input_password.getText().toString();
 
-                if(email.trim().equals("") || password.equals("")){
-                    Toast.makeText(getApplicationContext(), "You must fill out all the fields", Toast.LENGTH_SHORT).show();
-                }else{
-                    mProgressBar.setVisibility(View.VISIBLE);
+            if(email.trim().equals("") || password.equals("")){
+                Toast.makeText(getApplicationContext(), "You must fill out all the fields", Toast.LENGTH_SHORT).show();
+            }else{
+                btnLogin.setEnabled(false);
+                Utils.hideKeyboard(LoginActivity.this);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(LoginActivity.this, task -> {
+                            btnLogin.setEnabled(true);
 
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                                    // If sign in fails, display a message to the user. If sign in succeeds
-                                    // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
-                                    if (!task.isSuccessful()) {
-                                        Log.w(TAG, "signInWithEmail:failed", task.getException());
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "signInWithEmail:failed", task.getException());
 
-                                        Toast.makeText(LoginActivity.this, "Sign In Failed",
-                                                Toast.LENGTH_SHORT).show();
-                                        mProgressBar.setVisibility(View.GONE);
-                                        mPleaseWaitText.setVisibility(View.GONE);
+                                Toast.makeText(LoginActivity.this, String.format("Login failed : %s",
+                                        Objects.requireNonNull(task.getException()).getLocalizedMessage()),
+                                        Toast.LENGTH_LONG).show();
+                                mProgressBar.setVisibility(View.GONE);
+                            }
+                            else{
+                                Log.d(TAG, "signInWithEmail: successful login");
+                                mProgressBar.setVisibility(View.GONE);
 
-                                    }
-                                    else{
-                                        Log.d(TAG, "signInWithEmail: successful login");
-                                        Toast.makeText(LoginActivity.this, "Sign In Success",
-                                                Toast.LENGTH_SHORT).show();
-                                        mProgressBar.setVisibility(View.GONE);
-                                        mPleaseWaitText.setVisibility(View.GONE);
-
-                                        //added by girish 26-08-2019 - Saving Username in Shared-Preferences
-                                        String currentuser = mAuth.getCurrentUser().getUid();
-                                        SharedPreferences sp = getSharedPreferences("My_Preferences", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sp.edit();
-                                        editor.putString("UserID",currentuser );
+                                //added by girish 26-08-2019 - Saving Username in Shared-Preferences
+                                String currentuser = mAuth.getCurrentUser().getDisplayName();
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("username",currentuser);
+                                editor.putBoolean("loggedin",true);
+                                editor.apply();
 
 
+                                finish();
 
-                                        //Navigate to Home Activity on sign in success
-                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                        startActivity(intent);
-                                    }
+                                //Navigate to Home Activity on sign in success
+                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                startActivity(intent);
+                            }
 
-                                    // ...
-                                }
-                            });
-                }
-
+                            // ...
+                        });
             }
+
         });
     }
 

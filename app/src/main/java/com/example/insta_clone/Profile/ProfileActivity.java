@@ -1,5 +1,6 @@
 package com.example.insta_clone.Profile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.support.design.widget.BottomNavigationView;
@@ -16,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.insta_clone.FirebaseMethods;
 import com.example.insta_clone.GridImageAdapter;
+import com.example.insta_clone.Login_SignUp.LoginActivity;
 import com.example.insta_clone.R;
 import com.example.insta_clone.UniversalImageLoader;
 import com.example.insta_clone.bottomNavigationHelper;
@@ -62,8 +65,6 @@ public class ProfileActivity extends AppCompatActivity {
         //tempGridSetup();
 
         init();
-
-
     }
 
 
@@ -103,33 +104,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_menu, menu);
-        return true;
-    }
-
-
- /*   @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-        if (id == R.id.profile_settings) {
-
-            Intent intent = new Intent(getApplicationContext(), account_settings.class);
-            startActivity(intent);
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
-*/
 
   /*  private void initImageLoader(){
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
@@ -178,5 +152,35 @@ public class ProfileActivity extends AppCompatActivity {
         mProfilePhoto = (ImageView) findViewById(R.id.profile_photo);
     }
 */
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+      getMenuInflater().inflate(R.menu.profile_menu, menu);
+      return true;
+  }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+        if (id == R.id.profile_settings) {
+            Intent intent = new Intent(getApplicationContext(), account_settings.class);
+            startActivity(intent);
+        }else  if (id == R.id.logout) {
+            getSharedPreferences("My_Preferences", Context.MODE_PRIVATE).edit().putBoolean("loggedin",false).apply();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

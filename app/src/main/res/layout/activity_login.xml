@@ -5,7 +5,10 @@ Balaji (10-9-19)
 Login XML from Github-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:ignore="HardcodedText"
+    android:background="@android:color/white"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -32,9 +35,11 @@ Login XML from Github-->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="rajkumaar2304@gmail.com"
                 android:inputType="textEmailAddress"
                 android:hint="Email"
-                android:id="@+id/input_email"/>
+                android:id="@+id/input_email"
+                />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -47,6 +52,7 @@ Login XML from Github-->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="helloworld"
                 android:inputType="textPassword"
                 android:hint="Password"
                 android:id="@+id/input_password"/>
@@ -69,29 +75,18 @@ Login XML from Github-->
             android:layout_marginBottom="25dp"
             android:text="No account yet? Create one"
             android:gravity="center"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:id="@+id/link_signup"
-            android:textColor="@color/link_blue"/>
+            android:textColor="@color/link_blue"
+            tools:ignore="HardcodedText" />
 
+        <ProgressBar
+            android:id="@+id/loginRequestLoadingProgressbar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/loginRequestLoadingProgressbar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="120dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Please wait..."
-        android:id="@+id/pleaseWaitText"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/loginRequestLoadingProgressbar" />
 
 </RelativeLayout>

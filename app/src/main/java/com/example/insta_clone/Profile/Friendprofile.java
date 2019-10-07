@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,6 +66,7 @@ public class Friendprofile extends AppCompatActivity {
     private FirebaseMethods firebaseMethods;
     private TextView followButton;
     boolean followStatus = true;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +90,7 @@ public class Friendprofile extends AppCompatActivity {
         userID = getIntent().getExtras().getString("userID");
         firebaseMethods = new FirebaseMethods(getApplicationContext());
         isFollow(currentUserID, userID);
-
-
+        actionBar = getSupportActionBar();
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +117,7 @@ public class Friendprofile extends AppCompatActivity {
     }
 
 
+
     public void SetProfileWidgets(UserSettings userSettings) {
 
         Log.d(TAG, "SetProfileWidgets: setting profile widgets" + userSettings);
@@ -125,7 +127,7 @@ public class Friendprofile extends AppCompatActivity {
         mFollowers.setText(String.valueOf(userSettings.getUserAccountSettings().getFollowers()));
         mFollowing.setText(String.valueOf(userSettings.getUserAccountSettings().getFollowing()));
         mPosts.setText(String.valueOf(userSettings.getUserAccountSettings().getPosts()));
-        mUsername.setText(userSettings.getUser().getUsername());
+        actionBar.setTitle(userSettings.getUser().getUsername());
         tempGridSetup();
 
     }
