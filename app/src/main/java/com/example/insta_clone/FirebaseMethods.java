@@ -257,8 +257,6 @@ public class FirebaseMethods {
     }
 
 
-
-
     public UserSettings getUserSettings(DataSnapshot dataSnapshot){
 
         Log.d(TAG, "getUserSettings: retrieving user settigns from firebase..");
