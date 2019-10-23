@@ -1,30 +1,15 @@
 package com.example.insta_clone.Models;
 
-import java.net.URI;
-
 public class Post {
     String postid;
     String image;
     String user;
     String description;
     String title;
+    long timestamp;
     int upvote;
     int downvote;
     int comment_count;
-
-    public Post() {
-    }
-
-    public Post(String postid, String image, String user, String description, String title, int upvote, int downvote, int comment_count) {
-        this.postid = postid;
-        this.image = image;
-        this.user = user;
-        this.description = description;
-        this.title = title;
-        this.upvote = upvote;
-        this.downvote = downvote;
-        this.comment_count = comment_count;
-    }
 
     public String getPostid() {
         return postid;
@@ -66,6 +51,14 @@ public class Post {
         this.title = title;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public int getUpvote() {
         return upvote;
     }
@@ -87,6 +80,21 @@ public class Post {
     }
 
     public void setComment_count(int comment_count) {
+        this.comment_count = comment_count;
+    }
+
+    public Post() {
+    }
+
+    public Post(String postid, String image, String user, String description, String title, long timestamp, int upvote, int downvote, int comment_count) {
+        this.postid = postid;
+        this.image = image;
+        this.user = user;
+        this.description = description;
+        this.title = title;
+        this.timestamp = timestamp;
+        this.upvote = upvote;
+        this.downvote = downvote;
         this.comment_count = comment_count;
     }
 }

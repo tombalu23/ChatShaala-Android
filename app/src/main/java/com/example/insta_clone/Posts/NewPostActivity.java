@@ -2,19 +2,16 @@ package com.example.insta_clone.Posts;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,16 +25,12 @@ import com.example.insta_clone.Home.HomeActivity;
 import com.example.insta_clone.ImageUpload.GlideApp;
 import com.example.insta_clone.ImageUpload.ImagePickerActivity;
 import com.example.insta_clone.Models.Post;
-import com.example.insta_clone.Models.UserSettings;
 import com.example.insta_clone.R;
 import com.example.insta_clone.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -46,6 +39,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
+import java.security.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,12 +59,16 @@ public class NewPostActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     String userID;
     FirebaseMethods firebaseMethods;
-
-
+    Date date;
+    Timestamp timestamp;
+    LocalDateTime localDateTime;
+    Calendar calendar;
+    java.sql.Timestamp currentTimestamp;
     public static final int REQUEST_IMAGE = 100;
     private Uri uri;
     UniversalImageLoader universalImageLoader;
     Post post;
+    long now;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,9 @@ public class NewPostActivity extends AppCompatActivity {
         post_btn = findViewById(R.id.Postbtn);
         firebaseMethods = new FirebaseMethods(getApplicationContext());
         post =new Post();
+        date = new Date();
+        now = System.currentTimeMillis();
+
 
     }
 
@@ -110,6 +114,7 @@ public class NewPostActivity extends AppCompatActivity {
                 post.setUpvote(0);
                 post.setComment_count(0);
                 post.setUser(userID);
+                post.setTimestamp(now);
                 if(uri == null)
                 {Toast.makeText(getApplicationContext(), "Pls Upload A Image",Toast.LENGTH_SHORT).show();
                 return;}
