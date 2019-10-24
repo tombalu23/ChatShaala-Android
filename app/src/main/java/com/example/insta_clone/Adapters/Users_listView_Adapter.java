@@ -108,6 +108,7 @@ public class Users_listView_Adapter  extends BaseAdapter implements Filterable {
 
                 Intent intent = new Intent(context, Friendprofile.class);
                 intent.putExtra("userID", result.get(position));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
